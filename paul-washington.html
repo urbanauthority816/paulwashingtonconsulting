@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Paul Washington — Learning, Development & Coaching</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --black: #0a0a0f;
+    --dark: #111118;
+    --card: #16161f;
+    --border: rgba(255,255,255,0.07);
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-glow: rgba(201,168,76,0.15);
+    --white: #f5f3ee;
+    --muted: #8a8a9a;
+    --accent: #c9a84c;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 60px;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+    letter-spacing: 0.02em;
+  }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a {
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--gold); color: var(--black) !important;
+    padding: 10px 22px; border-radius: 2px;
+    font-weight: 600 !important; letter-spacing: 0.08em !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--gold-light) !important; color: var(--black) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 120px 60px 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; right: 0; top: 0; bottom: 0; width: 50%;
+    background: linear-gradient(135deg, transparent 30%, var(--gold-glow) 100%);
+    pointer-events: none;
+  }
+  .hero-text { position: relative; z-index: 2; padding-right: 60px; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 28px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block;
+    width: 32px; height: 1px; background: var(--gold);
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 5vw, 5.2rem);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 28px;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 em {
+    font-style: italic; color: var(--gold);
+  }
+  .hero-sub {
+    font-size: 1.05rem; line-height: 1.75;
+    color: #b0b0c0; max-width: 480px; margin-bottom: 44px;
+    font-weight: 300;
+  }
+  .hero-actions { display: flex; gap: 16px; align-items: center; }
+  .btn-primary {
+    background: var(--gold); color: var(--black);
+    padding: 16px 32px; border-radius: 2px;
+    font-size: 0.82rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; text-decoration: none;
+    transition: all 0.25s; display: inline-block;
+    box-shadow: 0 8px 32px rgba(201,168,76,0.3);
+  }
+  .btn-primary:hover {
+    background: var(--gold-light);
+    box-shadow: 0 12px 40px rgba(201,168,76,0.45);
+    transform: translateY(-1px);
+  }
+  .btn-ghost {
+    color: var(--white); font-size: 0.82rem; font-weight: 500;
+    letter-spacing: 0.08em; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--gold); }
+  .btn-ghost::after { content: '→'; }
+
+  /* Hero image */
+  .hero-image {
+    position: relative; z-index: 2;
+    display: flex; justify-content: center; align-items: flex-end;
+  }
+  .hero-img-wrap {
+    position: relative; width: 100%; max-width: 480px;
+  }
+  .hero-img-wrap img {
+    width: 100%; height: 600px; object-fit: cover;
+    display: block;
+    clip-path: polygon(0 0, 100% 0, 100% 88%, 88% 100%, 0 100%);
+    filter: grayscale(15%);
+  }
+  .hero-img-wrap::before {
+    content: '';
+    position: absolute; inset: -8px -8px 8px 8px;
+    border: 1px solid var(--gold); opacity: 0.4;
+    clip-path: polygon(0 0, 100% 0, 100% 88%, 88% 100%, 0 100%);
+  }
+  .hero-stat-float {
+    position: absolute; bottom: 40px; left: -40px;
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    padding: 18px 24px; min-width: 180px;
+  }
+  .hero-stat-float .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem; font-weight: 900; color: var(--gold); line-height: 1;
+  }
+  .hero-stat-float .stat-label {
+    font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em;
+    text-transform: uppercase; margin-top: 4px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px; background: var(--border);
+    margin: 0 60px;
+  }
+
+  /* ── SECTION BASE ── */
+  section { padding: 100px 60px; position: relative; }
+  .section-label {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; max-width: 40px;
+    height: 1px; background: var(--gold); opacity: 0.5;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 700; line-height: 1.15;
+    margin-bottom: 20px;
+  }
+  .text-gold { color: var(--gold); }
+
+  /* ── SERVICES ── */
+  .services-intro {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: start; margin-bottom: 60px;
+  }
+  .services-desc {
+    font-size: 1rem; line-height: 1.8; color: #b0b0c0; font-weight: 300;
+  }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  }
+  .service-card {
+    background: var(--card); padding: 36px 28px;
+    border-top: 3px solid transparent;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: default;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--gold-glow) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .service-card:hover { border-top-color: var(--gold); transform: translateY(-4px); }
+  .service-card:hover::before { opacity: 1; }
+  .service-icon {
+    width: 44px; height: 44px; margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--gold-glow); border-radius: 2px;
+    font-size: 1.4rem;
+  }
+  .service-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem; font-weight: 700; margin-bottom: 12px;
+  }
+  .service-card p {
+    font-size: 0.85rem; line-height: 1.75; color: var(--muted);
+  }
+
+  /* ── APPROACH ── */
+  .approach { background: var(--dark); }
+  .approach-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .approach-image {
+    position: relative;
+  }
+  .approach-image img {
+    width: 100%; height: 480px; object-fit: cover;
+    display: block;
+    clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%, 0 12%);
+    filter: grayscale(10%);
+  }
+  .approach-image::after {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 14rem; color: var(--gold); opacity: 0.07;
+    position: absolute; top: -40px; left: 10px; line-height: 1;
+    pointer-events: none;
+  }
+  .approach-steps { display: flex; flex-direction: column; gap: 0; }
+  .approach-step {
+    display: flex; gap: 24px; padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .approach-step:last-child { border-bottom: none; }
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 900; color: var(--gold);
+    opacity: 0.4; line-height: 1; flex-shrink: 0; width: 36px;
+  }
+  .step-content h3 {
+    font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.02em;
+  }
+  .step-content p { font-size: 0.83rem; line-height: 1.7; color: var(--muted); }
+
+  /* ── OFFERINGS ── */
+  .offerings-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px;
+    margin-top: 50px;
+  }
+  .offering {
+    background: var(--card); padding: 40px;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s;
+    position: relative;
+  }
+  .offering:hover { border-color: rgba(201,168,76,0.3); }
+  .offering-tag {
+    display: inline-block;
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--gold);
+    background: var(--gold-glow);
+    padding: 4px 10px; border-radius: 1px; margin-bottom: 16px;
+  }
+  .offering h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; font-weight: 700; margin-bottom: 12px;
+  }
+  .offering p { font-size: 0.85rem; line-height: 1.75; color: var(--muted); margin-bottom: 20px; }
+  .offering ul {
+    list-style: none; display: flex; flex-direction: column; gap: 8px;
+  }
+  .offering ul li {
+    font-size: 0.8rem; color: #9090a5;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .offering ul li::before {
+    content: '→'; color: var(--gold); font-weight: 600; flex-shrink: 0;
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { background: var(--dark); }
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 50px;
+  }
+  .testimonial {
+    background: var(--card); padding: 36px; border: 1px solid var(--border);
+    position: relative;
+  }
+  .testimonial::before {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem; color: var(--gold); opacity: 0.15;
+    position: absolute; top: 16px; right: 24px;
+    line-height: 1;
+  }
+  .testimonial p {
+    font-size: 0.87rem; line-height: 1.8; color: #c0c0d0;
+    margin-bottom: 24px; font-style: italic;
+  }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .author-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--gold-glow); border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; font-weight: 700; color: var(--gold);
+    flex-shrink: 0;
+  }
+  .author-info .name { font-size: 0.82rem; font-weight: 600; }
+  .author-info .role { font-size: 0.72rem; color: var(--muted); }
+
+  /* ── STATS STRIP ── */
+  .stats-strip {
+    background: var(--gold);
+    padding: 50px 60px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 40px; text-align: center;
+  }
+  .stat-item {}
+  .stat-item .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem; font-weight: 900;
+    color: var(--black); line-height: 1;
+  }
+  .stat-item .label {
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: rgba(10,10,15,0.6); margin-top: 6px;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    text-align: center; padding: 120px 60px;
+    position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-section h2 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    max-width: 700px; margin: 0 auto 24px;
+    position: relative;
+  }
+  .cta-section p {
+    font-size: 1rem; color: var(--muted); max-width: 500px;
+    margin: 0 auto 48px; line-height: 1.7;
+    position: relative;
+  }
+  .cta-actions { display: flex; justify-content: center; gap: 20px; position: relative; }
+  .btn-large {
+    background: var(--gold); color: var(--black);
+    padding: 20px 48px; border-radius: 2px;
+    font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; text-decoration: none;
+    transition: all 0.25s; display: inline-block;
+    box-shadow: 0 12px 48px rgba(201,168,76,0.4);
+  }
+  .btn-large:hover {
+    background: var(--gold-light);
+    box-shadow: 0 16px 56px rgba(201,168,76,0.55);
+    transform: translateY(-2px);
+  }
+  .btn-outline {
+    border: 1px solid rgba(201,168,76,0.4); color: var(--gold);
+    padding: 20px 48px; border-radius: 2px;
+    font-size: 0.85rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; text-decoration: none;
+    transition: all 0.25s; display: inline-block;
+  }
+  .btn-outline:hover {
+    border-color: var(--gold); background: var(--gold-glow);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; color: var(--gold);
+  }
+  .footer-links { display: flex; gap: 28px; }
+  .footer-links a {
+    font-size: 0.75rem; color: var(--muted); text-decoration: none;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--white); }
+  .footer-copy { font-size: 0.72rem; color: var(--muted); }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .fade-up {
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section, .hero { padding: 80px 24px; }
+    .hero { grid-template-columns: 1fr; padding-top: 120px; }
+    .hero-image { display: none; }
+    .services-intro, .approach-inner { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .offerings-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .stats-strip { grid-template-columns: repeat(2,1fr); padding: 40px 24px; }
+    .divider { margin: 0 24px; }
+    footer { flex-direction: column; gap: 20px; text-align: center; padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Paul Washington</div>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#approach">Approach</a>
+    <a href="#offerings">Offerings</a>
+    <a href="#testimonials">Results</a>
+    <a href="#contact" class="nav-cta">Book a Call</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">Learning · Development · Coaching</div>
+    <h1>Unlock Your<br><em>Fullest</em><br>Professional<br>Potential</h1>
+    <p class="hero-sub">I partner with professionals and organizations to build careers with intention — through transformative coaching, strategic development, and sessions that leave teams with tools they can actually use.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Book a Discovery Call</a>
+      <a href="#services" class="btn-ghost">Explore Services</a>
+    </div>
+  </div>
+  <div class="hero-image">
+    <div class="hero-img-wrap">
+      <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=900&auto=format&fit=crop" alt="Paul Washington — Speaker & Coach" />
+      <div class="hero-stat-float">
+        <div class="stat-num">10+</div>
+        <div class="stat-label">Years of Impact</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-intro fade-up">
+    <div>
+      <div class="section-label">What I Do</div>
+      <h2>Coaching That <em class="text-gold">Moves</em> People Forward</h2>
+    </div>
+    <p class="services-desc">Whether you're an individual navigating a pivotal career moment or an organization investing in your team's growth, my work is built around one belief: real development is both inspiring <em>and</em> practical. Every engagement leaves you with a clear path forward.</p>
+  </div>
+  <div class="services-grid fade-up">
+    <div class="service-card">
+      <div class="service-icon">🧭</div>
+      <h3>Career Development</h3>
+      <p>Clarify your direction, identify your strengths, and build a roadmap to the career you've been working toward — not the one you've fallen into.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🏆</div>
+      <h3>Professional Development</h3>
+      <p>Elevate how you communicate, lead, and show up. From executive presence to interpersonal skills, we sharpen what matters most in the modern workplace.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📍</div>
+      <h3>Success Planning</h3>
+      <p>Translate ambition into a concrete, achievable plan. We set milestones, remove barriers, and build the habits and systems that compound over time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section id="approach" class="approach">
+  <div class="approach-inner">
+    <div class="approach-image fade-up">
+      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=900&auto=format&fit=crop" alt="Coaching session in action" />
+    </div>
+    <div class="fade-up">
+      <div class="section-label">My Approach</div>
+      <h2>Inspiring. <em class="text-gold">Practical.</em> Lasting.</h2>
+      <p style="font-size:0.9rem;line-height:1.8;color:var(--muted);margin-bottom:36px;">My sessions aren't pep talks. They're structured experiences that blend real insight with immediate application. If you want your team walking away with tools they can actually use — this is the work.</p>
+      <div class="approach-steps">
+        <div class="approach-step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h3>Discover</h3>
+            <p>We start by understanding where you are, where you want to go, and what's standing in the way.</p>
+          </div>
+        </div>
+        <div class="approach-step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h3>Design</h3>
+            <p>Every engagement is tailored — custom content, relevant examples, and exercises built for your specific context.</p>
+          </div>
+        </div>
+        <div class="approach-step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h3>Deliver</h3>
+            <p>High-energy, deeply engaging sessions that challenge, inspire, and equip participants to take action immediately.</p>
+          </div>
+        </div>
+        <div class="approach-step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <h3>Sustain</h3>
+            <p>The work doesn't end when the session does. I offer ongoing partnerships to reinforce growth and drive lasting change.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFERINGS -->
+<section id="offerings">
+  <div class="fade-up">
+    <div class="section-label">Engagement Options</div>
+    <h2>Choose the Format That <em class="text-gold">Fits</em> Your Needs</h2>
+  </div>
+  <div class="offerings-grid fade-up">
+    <div class="offering">
+      <span class="offering-tag">Individual</span>
+      <h3>1:1 Coaching</h3>
+      <p>A focused, ongoing partnership designed to accelerate your personal and professional growth on your timeline.</p>
+      <ul>
+        <li>Personalized career roadmapping</li>
+        <li>Executive presence & communication</li>
+        <li>Goal setting & accountability systems</li>
+        <li>Flexible virtual or in-person sessions</li>
+      </ul>
+    </div>
+    <div class="offering">
+      <span class="offering-tag">Teams & Organizations</span>
+      <h3>Group Training</h3>
+      <p>Dynamic, interactive workshops for teams of any size — built to connect, challenge, and equip. Ideal for 30–50 participants.</p>
+      <ul>
+        <li>Custom 90-minute to half-day sessions</li>
+        <li>In-person (with virtual call-in option)</li>
+        <li>Fully virtual delivery available</li>
+        <li>Supplemental materials included</li>
+      </ul>
+    </div>
+    <div class="offering">
+      <span class="offering-tag">Speaking</span>
+      <h3>Keynotes & Panels</h3>
+      <p>Energizing keynote presentations for conferences, retreats, and all-hands events — grounded in real insight, not just inspiration.</p>
+      <ul>
+        <li>Tailored to your theme & audience</li>
+        <li>Interactive Q&A format available</li>
+        <li>Available for national engagements</li>
+        <li>Topics: career, leadership, burnout & more</li>
+      </ul>
+    </div>
+    <div class="offering">
+      <span class="offering-tag">Ongoing Partnership</span>
+      <h3>L&D Retainer</h3>
+      <p>For organizations ready to invest in a sustained culture of learning. I become an embedded partner in your team's development strategy.</p>
+      <ul>
+        <li>Monthly programming & facilitation</li>
+        <li>Curriculum design & facilitation support</li>
+        <li>Metrics tracking & impact reporting</li>
+        <li>Priority scheduling & custom rates</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip fade-up">
+  <div class="stat-item">
+    <div class="num">500+</div>
+    <div class="label">Professionals Reached</div>
+  </div>
+  <div class="stat-item">
+    <div class="num">10+</div>
+    <div class="label">Years of Experience</div>
+  </div>
+  <div class="stat-item">
+    <div class="num">90%</div>
+    <div class="label">Repeat Engagement Rate</div>
+  </div>
+  <div class="stat-item">
+    <div class="num">100%</div>
+    <div class="label">Tailored to Your Team</div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="testimonials">
+  <div class="fade-up">
+    <div class="section-label">What People Are Saying</div>
+    <h2>Results That <em class="text-gold">Speak</em> for Themselves</h2>
+  </div>
+  <div class="testimonials-grid fade-up">
+    <div class="testimonial">
+      <p>"Paul doesn't just deliver a training — he creates an experience. Our team walked away with a completely different perspective on how they approach their careers. The energy in the room was unlike anything we've had before."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">JM</div>
+        <div class="author-info">
+          <div class="name">Jamie M.</div>
+          <div class="role">Director of People Operations</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <p>"What sets Paul apart is that he's both inspiring and incredibly practical. I've been to countless workshops where I felt great in the room and forgot everything by Monday. That didn't happen here. I still use the frameworks every week."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">TL</div>
+        <div class="author-info">
+          <div class="name">Taylor L.</div>
+          <div class="role">Senior Manager, Strategy</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <p>"After just two coaching sessions with Paul, I had more clarity about my career path than I'd had in five years. He has a gift for asking exactly the right questions and holding you accountable to what you actually want."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">RB</div>
+        <div class="author-info">
+          <div class="name">Renee B.</div>
+          <div class="role">Associate, Financial Services</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contact" class="cta-section">
+  <div class="fade-up">
+    <div class="section-label" style="justify-content:center">Let's Connect</div>
+    <h2>Ready to Invest in <em class="text-gold">What's Next?</em></h2>
+    <p>Let's start with a conversation. A discovery call is free, pressure-free, and the first step toward building something meaningful — for you or your team.</p>
+    <div class="cta-actions">
+      <a href="mailto:urbanauthority816@gmail.com" class="btn-large">Book a Discovery Call</a>
+      <a href="mailto:urbanauthority816@gmail.com" class="btn-outline">Send an Email</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Paul Washington</div>
+  <div class="footer-links">
+    <a href="#services">Services</a>
+    <a href="#approach">Approach</a>
+    <a href="#offerings">Offerings</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 Paul Washington. All rights reserved.</div>
+</footer>
+
+<script>
+  // Scroll animations
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
